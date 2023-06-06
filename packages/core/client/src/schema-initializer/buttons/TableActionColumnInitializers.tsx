@@ -102,8 +102,10 @@ export const TableActionColumnInitializers = (props: any) => {
                 'x-decorator': 'ACLActionProvider',
               },
               visible: () => {
-                const collection = useCollection();
-                return (collection as any).template !== 'view';
+                // 操作カラムに"編集"をできるように変更
+                // const collection = useCollection();
+                // return (collection as any).template !== 'view';
+                return true;
               },
             },
             modifyFlag && {
