@@ -14,13 +14,13 @@ const recursiveParent = (schema: Schema) => {
   }
 };
 
-const useRelationFields = () => {
+const useRelationFields = (coll = null) => {
   const fieldSchema = useFieldSchema();
   const { getCollectionFields } = useCollectionManager();
   let fields = [];
 
   if (fieldSchema['x-initializer']) {
-    fields = useCollection().fields;
+    fields = coll ? coll.fields : useCollection().fields;
   } else {
     const collection = recursiveParent(fieldSchema.parent);
     if (collection) {
@@ -234,7 +234,7 @@ export const RecordBlockInitializers = (props: any) => {
         {
           type: 'itemGroup',
           title: '{{t("Relationship blocks")}}',
-          children: useRelationFields(),
+          children: useRelationFields(collection),
         },
         {
           type: 'itemGroup',
