@@ -164,13 +164,23 @@ const useFormCollections = (props) => {
 export const RecordBlockInitializers = (props: any) => {
   const { t } = useTranslation();
   const { insertPosition, component, actionInitializers } = props;
-  const collection = useCollection();
+  // const collection = useCollection();
+  const collection = (() => {
+    const coll = useCollection();
+    if (coll.template !== 'view') {
+      return coll;
+    } else {
+      const source = coll.fields.find((field) => field.source.split(".")[1] === 'id')?.source.split(".")[0];
+      return source ? useCollectionManager().getCollection(source) : coll;
+    }
+  })();
   const { getChildrenCollections } = useCollectionManager();
   const formChildrenCollections = getChildrenCollections(collection.name);
   const hasFormChildCollection = formChildrenCollections?.length > 0;
   const detailChildrenCollections = getChildrenCollections(collection.name, true);
   const hasDetailChildCollection = detailChildrenCollections?.length > 0;
-  const modifyFlag = (collection as any).template !== 'view';
+  // const modifyFlag = (collection as any).template !== 'view';
+  const modifyFlag = true;
   return (
     <SchemaInitializer.Button
       wrap={gridRowColWrap}
@@ -216,6 +226,7 @@ export const RecordBlockInitializers = (props: any) => {
                   key: 'form',
                   type: 'item',
                   title: '{{t("Form")}}',
+                  targetCollection: collection,
                   component: 'RecordFormBlockInitializer',
                 },
           ],
